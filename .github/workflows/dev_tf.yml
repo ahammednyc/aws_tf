@@ -56,7 +56,7 @@ jobs:
 
       - name: Terraform apply
         working-directory: ${{ env.WORK_DIR}}
-        run: terraform apply --auto-aarove               
+        run: terraform apply --auto-aprove               
 
 #       - name: Terraform Plan
 #         run: terraform plan -out=tfplan
