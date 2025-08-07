@@ -18,7 +18,7 @@ permissions:
 env:
   BUCKET_NAME: "githubsample-645373"
   AWS_REGION: "ap-south-1"    
-  WORK_DIR: "./terraform_modules/dev"    
+  WORK_DIR: "terraform_modules/dev"    
 
 jobs:
   terraform-plan:
