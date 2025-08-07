@@ -17,7 +17,8 @@ permissions:
 
 env:
   BUCKET_NAME: "githubsample-645373"
-  AWS_REGION: "ap-south-1"      
+  AWS_REGION: "ap-south-1"    
+  WORK_DIR: "./terraform_modules/dev"    
 
 jobs:
   terraform-plan:
@@ -41,10 +42,22 @@ jobs:
 
         
       - name: Terraform Init
-        run: |
-            cd terraform_modules/dev
-            terraform init
-        
+        working-directory: ${{ env.WORK_DIR}}
+        run: terraform init
+
+      - name: Terraform validate
+        working-directory: ${{ env.WORK_DIR}}
+        run: terraform validate
+
+  
+      - name: terraform paln
+        working-directory: ${{ env.WORK_DIR}}
+        run: terraform plan
+
+      - name: Terraform apply
+        working-directory: ${{ env.WORK_DIR}}
+        run: terraform apply --auto-aarove               
+
 #       - name: Terraform Plan
 #         run: terraform plan -out=tfplan
 
