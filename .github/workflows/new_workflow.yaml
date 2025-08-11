@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 env:
-  BUCKET_NAME: "githubsample-645373"
+  
   AWS_REGION: "ap-south-1"    
   WORK_DIR: ${{ github.workspace }}/terrafrom_modules/test
 
