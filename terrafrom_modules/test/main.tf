@@ -7,6 +7,6 @@ module "sampl" {
 
 module "samp2" {
   source        = "../modules"
-  instance_type = "t3.nano"
+  instance_type = "t3.micro"
   ec2_tag       = "test"
 }
