@@ -32,7 +32,7 @@ on:
       confirm:
         description: "Type YES to confirm"
         required: true
-        default: "NO"
+        default: "YES"
 
 
 permissions:
