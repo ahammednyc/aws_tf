@@ -1,0 +1,93 @@
+name: Terraform Workflow latest
+
+# on:
+#   push:
+#     branches:
+#       #- 'tf'
+#       - test 
+#   pull_request:
+#     branches:
+#       - main
+#     types:
+#       - closed  
+
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Choose Terraform action (apply/destroy)"
+        required: true
+        default: "apply"
+        type: choice
+        options:
+          - apply
+          - destroy
+      confirm:
+        description: "Type YES to confirm"
+        required: true
+        default: "NO"
+
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  
+  AWS_REGION: "ap-south-1"    
+  WORK_DIR: ${{ github.workspace }}/terrafrom_modules/test
+
+jobs:
+  terraform-plan:
+    
+    runs-on: ubuntu-latest
+    
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::997211577761:role/aws_oidc_connector
+          aws-region: ${{ env.AWS_REGION }}
+
+
+        
+      - name: Terraform Init
+        working-directory: ${{ env.WORK_DIR}}
+        run: terraform init
+
+      - name: Terraform validate
+        working-directory: ${{ env.WORK_DIR}}
+        run: terraform validate
+
+  
+      - name: terraform paln
+        working-directory: ${{ env.WORK_DIR}}
+        run: terraform plan
+
+      - name: Confirm user input
+        run: |
+          if [[ "${{ github.event.inputs.confirm }}" != "YES" ]]; then
+            echo "Confirmation failed. Exiting."
+            exit 1
+          fi
+
+      - name: Terraform Apply or Destroy
+        working-directory: ${{ env.WORK_DIR}}
+        run: |
+          if [[ "${{ github.event.inputs.action }}" == "apply" ]]; then
+            terraform apply -auto-approve
+          elif [[ "${{ github.event.inputs.action }}" == "destroy" ]]; then
+            terraform destroy -auto-approve
+          else
+            echo "Invalid action."
+            exit 1
+          fi
